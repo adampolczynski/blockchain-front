@@ -7,13 +7,11 @@ interface ModalProps {
 }
 export const Modal = ({ show, text, onClose }: ModalProps) => {
   return (
-    <div>
-      <ReactModal isOpen={show} contentLabel="Info">
-        <textarea rows={10} value={text}>
-          {text}
-        </textarea>
-        <button onClick={() => onClose()}>Close Modal</button>
-      </ReactModal>
-    </div>
+    <ReactModal isOpen={show}>
+      <textarea rows={10} value={text}>
+        {text}
+      </textarea>
+      <button onClick={() => onClose()}>Close Modal</button>
+    </ReactModal>
   );
 };

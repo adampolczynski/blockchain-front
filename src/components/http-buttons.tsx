@@ -1,81 +1,37 @@
-import { useState } from "react";
-import axios, { AxiosError } from "axios";
-
-const URL = "http://localhost:3001";
+import { ChainService } from '../services/chain-service'
+import { WalletService } from '../services/wallet-service'
+import { Transaction } from '../types/common'
 
 interface BUTTON {
-  func: () => void;
-  title: string;
+  func: any //(data: Transaction & string & undefined) => void
+  title: string
 }
 
-export const HTTPButtons = () => {
-  const getBlocks = () => {
-    axios
-      .get(`${URL}/blocks`)
-      .then(({ data }: any) => {
-        //setValue(data);
-      })
-      .catch((e: AxiosError) => console.error(e));
-  };
-  const mine = () => {
-    axios
-      .post(`${URL}/mine`, {
-        data: "test_data",
-      })
-      .then(({ data }: any) => {
-        //setValue(data);
-      })
-      .catch((e: AxiosError) => console.error(e));
-  };
-  const walletTransactions = () => {
-    axios
-      .get(`${URL}/wallet/transactions`)
-      .then(({ data }: any) => {
-        //setValue(data);
-      })
-      .catch((e: AxiosError) => console.error(e));
-  };
-  const walletTransact = () => {
-    axios
-      .post(`${URL}/wallet/transact`, {
-        data: {
-          to: "",
-          amount: 10,
-          type: "",
-          blockchain: [],
-        },
-      })
-      .then(({ data }: any) => {
-        //setValue(data);
-      })
-      .catch((e: AxiosError) => console.error(e));
-  };
+interface HTTPButtonsProps {
+  handleClick: () => void
+}
 
+export const HTTPButtons = ({ handleClick }: HTTPButtonsProps) => {
   const BUTTONS: BUTTON[] = [
     {
-      func: getBlocks,
-      title: "Get blocks",
+      func: ChainService.getBlocks,
+      title: 'Get blocks',
     },
     {
-      func: mine,
-      title: "Mine",
+      func: ChainService.mine,
+      title: 'Mine',
     },
-    { func: walletTransactions, title: "Wallet transactions" },
-    { func: walletTransact, title: "Wallet transact" },
-  ];
+    { func: WalletService.walletTransactions, title: 'Wallet transactions' },
+    { func: WalletService.walletTransact, title: 'Wallet transact' },
+  ]
 
   return (
     <div style={{}}>
       {BUTTONS.map((_: BUTTON) => (
-        <button
-          onClick={() => {
-            _.func();
-            //setModalVisible(true);
-          }}
-        >
+        <button key={`${_.title}`} onClick={() => handleClick()}>
           {_.title} (WS)
         </button>
       ))}
     </div>
-  );
-};
+  )
+}

@@ -1,47 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { WSButtons } from "./components/ws-buttons";
-import { HTTPButtons } from "./components/http-buttons";
+import { TestScreen } from './screens/test-screen'
+import { WSService } from './services/ws-service'
 
 const App = () => {
-  // const [value, setValue] = useState();
-  // const [modalVisible, setModalVisible] = useState(false);
-
-  // const [chain, setChain] = useState([]);
+  WSService.initialize()
 
   return (
-    <div
-      style={{
-        display: "flex",
-        width: "100%",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          width: 600,
-          height: 200,
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <WSButtons />
-      </div>
-      <div
-        style={{
-          display: "flex",
-          width: 600,
-          height: 200,
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <HTTPButtons />
-      </div>
+    <div style={{}}>
+      <TestScreen />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

@@ -1,20 +1,26 @@
 import axios, { AxiosResponse } from 'axios'
 
-const URL = process.env.API_URL
+const URL = process.env.REACT_APP_API_URL
 
-const getBlocks = () => {
-  axios.get(`${URL}/blocks`).then(({ data }: AxiosResponse) => {
-    return data
-  })
+const getBlocks = async () => {
+  try {
+    const { data: response } = await axios.get(`${URL}/blocks`)
+    return response
+  } catch (e) {
+    console.error(e)
+    return null
+  }
 }
-const mine = (data: string) => {
-  axios
-    .post(`${URL}/mine`, {
+const mine = async (data: string) => {
+  try {
+    const { data: response } = await axios.post(`${URL}/mine`, {
       data,
     })
-    .then(({ data }: AxiosResponse) => {
-      return data
-    })
+    return response
+  } catch (e) {
+    console.error(e)
+    return null
+  }
 }
 
 export const ChainService = {

@@ -1,20 +1,20 @@
-export interface Account {}
+export interface IAccount {}
 
-export interface Block {
+export interface IBlock {
   timestamp: string
   lastHash: string
   hash: string
   data: object
   validator?: string
   signature?: string
-  accounts?: Account[]
+  accounts?: IAccount[]
 }
 
-export type Chain = Block[]
+export type IChain = IBlock[]
 
-export interface Transaction {
+export interface ITransaction {
   to: string
   amount: number
   type: 'x' | 'y'
-  blockchain?: Chain
+  blockchain?: IChain
 }

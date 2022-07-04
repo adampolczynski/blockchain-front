@@ -1,14 +1,14 @@
 import axios, { AxiosResponse } from 'axios'
-import { Transaction } from '../types/common'
+import { ITransaction } from '../types/common'
 
-const URL = process.env.API_URL
+const URL = process.env.REACT_APP_API_URL
 
 const walletTransactions = () => {
   axios.get(`${URL}/wallet/transactions`).then(({ data }: AxiosResponse) => {
     return data
   })
 }
-const walletTransact = (transaction: Transaction) => {
+const walletTransact = (transaction: ITransaction) => {
   axios
     .post(`${URL}/wallet/transact`, {
       data: transaction,

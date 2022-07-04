@@ -1,32 +1,38 @@
 import { WSService } from '../services/ws-service'
-import { Chain, Block, Transaction } from '../types/common'
+import { IChain, IBlock, ITransaction } from '../types/common'
 
-interface BUTTON {
-  func: any // (data: Transaction & Block & Chain) => void
+interface IWSButton {
+  func: () => (data: ITransaction & IBlock & IChain) => void
   title: string
 }
 
-interface WSButtonsProps {
-  handleClick: (func: BUTTON['func']) => void
+interface IWSButtonsProps {
+  callback: () => void
 }
 
-export const WSButtons = ({ handleClick }: WSButtonsProps) => {
-  const WS_BUTTONS: BUTTON[] = [
+export const WSButtonsComponent = ({ callback }: IWSButtonsProps) => {
+  const WS_BUTTONS: IWSButton[] = [
     {
-      func: WSService.createTransaction,
+      func: () => WSService.createTransaction,
       title: 'Create transaction',
     },
     {
-      func: WSService.sendChain,
+      func: () => WSService.sendChain,
       title: 'Send chain',
     },
-    { func: WSService.sendBlock, title: 'Send block' },
+    { func: () => WSService.sendBlock, title: 'Send block' },
   ]
 
   return (
     <div style={{}}>
-      {WS_BUTTONS.map((_: BUTTON) => (
-        <button key={`${_.title}`} onClick={() => handleClick(_.func)}>
+      {WS_BUTTONS.map((_: IWSButton) => (
+        <button
+          key={`${_.title}`}
+          onClick={() => {
+            _.func()
+            callback()
+          }}
+        >
           {_.title} (WS)
         </button>
       ))}

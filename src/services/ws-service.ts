@@ -1,22 +1,24 @@
-import { Block, Chain, Transaction } from '../types/common'
+import { IBlock, IChain, ITransaction } from '../types/common'
 
-const ws: any = {} //new WebSocket(process.env.WS_URL || '')
+let ws: WebSocket | undefined = undefined
 
 const initialize = () => {
-  // ws.onopen = (event) => {
-  //   console.log('WebSocket connection opened')
-  // }
-  // ws.onmessage = function (event) {
-  //   const json = JSON.parse(event.data)
-  //   try {
-  //     console.warn('Received JSON by WS: ', json)
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
+  ws = new WebSocket(process.env.REACT_APP_WS_URL || '')
+  ws.onopen = (event) => {
+    console.log('WebSocket connection opened')
+  }
+  ws.onmessage = function (event) {
+    const json = JSON.parse(event.data)
+    try {
+      console.warn('Received JSON by WS: ', json)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 }
 
-const createTransaction = ({ to, amount, type }: Transaction) => {
+const createTransaction = ({ to, amount, type }: ITransaction) => {
+  if (!ws) throw new Error('no websocket connection')
   ws.send(
     JSON.stringify({
       type: 'TRANSACTION',
@@ -29,7 +31,8 @@ const createTransaction = ({ to, amount, type }: Transaction) => {
   )
 }
 
-const sendChain = (chain: Chain) => {
+const sendChain = (chain: IChain) => {
+  if (!ws) throw new Error('no websocket connection')
   ws.send(
     JSON.stringify({
       type: 'CHAIN',
@@ -37,7 +40,8 @@ const sendChain = (chain: Chain) => {
     })
   )
 }
-const sendBlock = (block: Block) => {
+const sendBlock = (block: IBlock) => {
+  if (!ws) throw new Error('no websocket connection')
   ws.send(
     JSON.stringify({
       type: 'BLOCK',

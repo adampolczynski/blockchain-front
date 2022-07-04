@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { WSButtons } from '../components/ws-buttons'
-import { HTTPButtons } from '../components/http-buttons'
+import { WSButtonsComponent } from '../components/ws-buttons'
+import { IHTTPButton, HTTPButtonsComponent } from '../components/http-buttons'
+import { IBlock, IChain } from '../types/common'
+import { BlockComponent } from '../components/block'
 
 export const TestScreen = () => {
+  const [chain, setChain] = useState<IChain>([])
+  const [transactions, setTransactions] = useState([])
+
   return (
     <div
       style={{
         display: 'flex',
-        width: 800,
-        flexDirection: 'column',
+        width: '100%',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
       }}
@@ -16,26 +21,31 @@ export const TestScreen = () => {
       <div
         style={{
           display: 'flex',
-          width: 600,
-          height: 200,
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          width: 1000,
+          maxHeight: 500,
+          overflow: 'scroll',
         }}
       >
-        <WSButtons
-          handleClick={(func: any) => console.log('Passed func: ', func)}
-        />
+        {chain.map((b: IBlock) => {
+          return <BlockComponent {...b} />
+        })}
       </div>
       <div
         style={{
           display: 'flex',
-          width: 600,
-          height: 200,
+          width: 200,
+          height: 500,
           justifyContent: 'space-between',
           alignItems: 'center',
         }}
       >
-        <HTTPButtons handleClick={() => console.log('')} />
+        <WSButtonsComponent callback={() => {}} />
+        <HTTPButtonsComponent
+          callback={({ chain }) => {
+            console.warn(chain)
+            setChain(chain)
+          }}
+        />
       </div>
     </div>
   )

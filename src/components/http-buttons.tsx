@@ -1,34 +1,59 @@
+import { AxiosError } from 'axios'
 import { ChainService } from '../services/chain-service'
 import { WalletService } from '../services/wallet-service'
-import { Transaction } from '../types/common'
+import { IChain, ITransaction } from '../types/common'
 
-interface BUTTON {
-  func: any //(data: Transaction & string & undefined) => void
+export interface IHTTPButton {
+  func: any //() => Chain & Transaction & string & undefined
   title: string
 }
 
-interface HTTPButtonsProps {
-  handleClick: () => void
+interface IHTTPButtonsProps {
+  callback: (otps: { chain: IChain }) => void
 }
 
-export const HTTPButtons = ({ handleClick }: HTTPButtonsProps) => {
-  const BUTTONS: BUTTON[] = [
+export const HTTPButtonsComponent = ({ callback }: IHTTPButtonsProps) => {
+  const BUTTONS: IHTTPButton[] = [
     {
-      func: ChainService.getBlocks,
+      func: async () => {
+        const chain = await ChainService.getBlocks()
+        return chain
+      },
       title: 'Get blocks',
     },
     {
-      func: ChainService.mine,
+      func: async () => {
+        const chain = await ChainService.mine('test')
+        return chain
+      },
       title: 'Mine',
     },
-    { func: WalletService.walletTransactions, title: 'Wallet transactions' },
-    { func: WalletService.walletTransact, title: 'Wallet transact' },
+    {
+      func: async () => {
+        return await WalletService.walletTransactions
+      },
+      title: 'Wallet transactions',
+    },
+    {
+      func: async () => {
+        return await WalletService.walletTransact
+      },
+      title: 'Wallet transact',
+    },
   ]
 
   return (
     <div style={{}}>
-      {BUTTONS.map((_: BUTTON) => (
-        <button key={`${_.title}`} onClick={() => handleClick()}>
+      {BUTTONS.map((_: IHTTPButton) => (
+        <button
+          key={`${_.title}`}
+          onClick={async () => {
+            const chain = await _.func()
+            callback({
+              chain,
+            })
+          }}
+        >
           {_.title} (WS)
         </button>
       ))}
